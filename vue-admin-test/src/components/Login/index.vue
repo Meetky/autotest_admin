@@ -11,15 +11,22 @@
   <div class="loginPage">
     <el-card class="box-card" shadow="hover">
       <h3>登录页面</h3>
-      <el-form label-width="60px">
-        <el-form-item label="用户名">
-          <el-input v-model="username"></el-input>
+      <el-form
+        :rules="rules"
+        :model="form"
+        label-width="80px"
+        label-color="red"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input type="password" v-model="password"></el-input>
-          <span v-if="this.errorInfo" style="font-size: 10px; color: red">{{
-            errorInfo
-          }}</span>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="form.password"></el-input>
+          <span
+            v-if="this.form.errorInfo"
+            style="font-size: 10px; color: red"
+            >{{ form.errorInfo }}</span
+          >
         </el-form-item>
         <el-form-item class="btn">
           <el-button type="primary" @click="login">登录</el-button>
@@ -31,21 +38,40 @@
 </template>
 
 <script>
-import axios from "axios";
 import { login } from "@/api/login.js";
 import { register } from "@/api/regist.js";
 export default {
   name: "Login",
   data() {
     return {
-      username: "",
-      password: "",
-      errorInfo: "",
+      form: {
+        username: "",
+        password: "",
+        errorInfo: "",
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          {
+            pattern: /^(?!\s+).*(?<!\s)$/,
+            message: "首尾不能为空格",
+            trigger: "blur",
+          },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            pattern: /^(?!\s+).*(?<!\s)$/,
+            message: "首尾不能为空格",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
     login() {
-      if (this.username === "" || this.password === "") {
+      if (this.form.username === "" || this.form.password === "") {
         console.log("输入为空");
         this.$message({
           showClose: true,
@@ -62,20 +88,25 @@ export default {
         //   },
         // }).then(
         login({
-          username: this.username,
-          password: this.password,
+          username: this.form.username,
+          password: this.form.password,
         }).then(
           (response) => {
-            console.log(response);
-            console.log(response.data.result);
             if (response.status === 200 && response.data.result) {
               localStorage.setItem(
                 "token",
-                JSON.stringify(response.data.detail.token)
+                // JSON.stringify(response.data.detail.token) token转成字符串后，后端无法校验
+                response.data.detail.token
               );
-              this.$router.push("/home");
+              //登录成功,跳转至首页,传递用户名
+              this.$router.push({
+                path: "/home",
+                query: {
+                  username: this.form.username,
+                },
+              });
             } else {
-              this.errorInfo = response.data.errorInfo;
+              this.form.errorInfo = response.data.errorInfo;
             }
           },
           (error) => {
@@ -105,7 +136,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .loginPage {
   background: url("@/../../../assets/login.jpg");
   background-size: 100% 100%;
@@ -127,5 +158,13 @@ export default {
   .btn {
     margin-right: 46px;
   }
+}
+button:hover {
+  box-shadow: 0px 15px 20px rgba(11, 201, 83, 0.4);
+  transform: translateY(-7px);
+}
+
+button:active {
+  transform: translateY(-1px);
 }
 </style>

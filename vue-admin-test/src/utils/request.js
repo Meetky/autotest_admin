@@ -1,4 +1,7 @@
 import axios from "axios"
+import {
+    MessageBox
+} from 'element-ui';
 
 //新建axios实例
 let instance = axios.create({
@@ -9,8 +12,8 @@ let instance = axios.create({
 instance.interceptors.request.use(
     //在发送请求前
     request => {
-        const auth = "Token" + localStorage.getItem("token");
-        request.headers.Authorization
+        const auth = "Token " + localStorage.getItem("token");
+        request.headers.Authorization = auth
         return request;
     },
     //出现错误
@@ -27,6 +30,25 @@ instance.interceptors.response.use(
         return response;
     },
     error => {
+        // 后端验证token过期以后 会返回401 
+        if (error.response.status == 401) {
+            MessageBox.confirm('登录过期，请重新登录', '确定登出', {
+                confirmButtonText: '重新登录',
+                // 禁用各种取消弹窗操作,强制点击重新登录按钮
+                showCancelButton: false,
+                showClose: false,
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                type: 'warning'
+            }).then(() => {
+                // 调用接口退出登录
+                get('/logout/').then(response => {
+                    // 移除本地缓存的token
+                    localStorage.removeItem("token");
+                    location.reload();
+                })
+            })
+        }
         return Promise.reject(error);
     }
 )

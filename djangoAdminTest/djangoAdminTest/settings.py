@@ -40,16 +40,24 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 ]
 APPEND_SLASH = False
+# 设置全局身份认证方案
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'User.auth.ExpiringTokenAuthentication',  # token过期时间
+    #     # 'rest_framework.authentication.TokenAuthentication',  # token认证
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'User.common.auth.ExpiringTokenAuthentication',
+        # 添加Token验证，如果Token过期，不需要登录的界面也不能访问，最好配置在具体的页面
 
-# # 设置全局身份认证方案
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',  # token认证
-#     )
-# }
+    ),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

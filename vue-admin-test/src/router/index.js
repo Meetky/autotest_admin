@@ -14,6 +14,7 @@ const router = new Router({
             component: Login
         },
         {
+            name: "home",
             path: '/home',
             component: () => import("@/components/Home")
         }
@@ -21,6 +22,26 @@ const router = new Router({
     ]
 })
 
+//定义前置路由守卫
+router.beforeEach((to, from, next) => {
+    let token = localStorage.getItem("token");
+    if (token) {
+        // token存在 访问login 跳转至产品证书制作页面
+        if (to.path == '/' || to.path == '/login') {
+            next('/home');
+        } else {
+            next();
+        }
+    } else {
+        // token不存在  路径'/login'就是登录页面设置的path
+        if (to.path === '/login') {
+            next();
+        } else {
+            next('/')
+        }
+    }
+
+})
 
 //暴露router
 export default router

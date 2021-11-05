@@ -3,7 +3,7 @@
     <el-menu
       default-active="1"
       class="el-menu-vertical-demo"
-      :collapse="isCollapse"
+      :collapse="!isCollapse"
     >
       <el-menu-item index="1">
         <i class="el-icon-menu"></i>

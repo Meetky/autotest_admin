@@ -57,3 +57,39 @@ def login(request):
     # 获取token字符串
     token = tokenObj.key
     return Response({"result": result, "detail": {'token': token}, "errorInfo": errorInfo})
+
+
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+@authentication_classes(())
+def logout(request):
+    """退出登录"""
+    result = True
+    errorInfo = u''
+    detail = {}
+    token = ''
+    authInfo = request.META.get('HTTP_AUTHORIZATION')
+    print(authInfo)
+    if authInfo:
+        print(authInfo)
+        token = authInfo.split(' ')[1]
+    try:
+        # 退出登录 删除token
+        tokenObj = Token.objects.get(key=token)
+        tokenObj.delete()
+    except Exception as e:
+        # traceback.print_exc(e)
+        print('token not exist')
+
+        result = False
+        errorInfo = u'退出登录失败'
+    return Response({"result": result, "detail": {}, "errorInfo": errorInfo})
+
+
+@api_view(["GET"])
+def getUserInfo(request):
+    return Response({"result": "ok"})
+
+@api_view(["GET"])
+def testApi(request):
+    return Response({"result": "ok"})

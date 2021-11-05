@@ -12,11 +12,18 @@
           <el-avatar
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           ></el-avatar>
-          {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ this.$route.query.username
+          }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item icon="el-icon-switch-button"
             ><span @click="logout">退出登录</span></el-dropdown-item
+          >
+          <el-dropdown-item
+            ><span @click="test">测试token</span></el-dropdown-item
+          >
+          <el-dropdown-item
+            ><span @click="testApi1">测试testApi</span></el-dropdown-item
           >
         </el-dropdown-menu>
       </el-dropdown>
@@ -25,11 +32,14 @@
 </template>
 
 <script>
+import { verifyToken } from "@/api/token.js";
+import { get } from "@/utils/request.js";
+import axios from "axios";
 export default {
   name: "Header",
   data() {
     return {
-      username: "Concon",
+      nickname: "",
     };
   },
   methods: {
@@ -40,6 +50,18 @@ export default {
       console.log("用户点击退出了");
       localStorage.removeItem("token");
       this.$router.push("/");
+    },
+    test() {
+      verifyToken();
+    },
+    testApi1() {
+      const header = {
+        Authorization: "Token " + localStorage.getItem("token"),
+      };
+      // axios.get("/api/testApi/", { headers: header }).then((response) => {
+      //   console.log(response.data);
+      // });
+      get("/testApi/");
     },
   },
 };
