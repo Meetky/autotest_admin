@@ -1,7 +1,6 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 
 from django.contrib import auth
 
@@ -10,8 +9,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
-
 # Create your views here.
+# from ..User.common.register import Register
+from User.common.register import Register
 
 
 def index(request):
@@ -59,6 +59,17 @@ def login(request):
     return Response({"result": result, "detail": {'token': token}, "errorInfo": errorInfo})
 
 
+@api_view(["POST"])
+@permission_classes(())
+@authentication_classes(())
+def register(request):
+    """注册"""
+    data = request.data
+    print("-----", data)
+    res = Register().register(data)
+    return Response(res)
+
+
 @api_view(["GET"])
 @permission_classes((AllowAny,))
 @authentication_classes(())
@@ -66,7 +77,6 @@ def logout(request):
     """退出登录"""
     result = True
     errorInfo = u''
-    detail = {}
     token = ''
     authInfo = request.META.get('HTTP_AUTHORIZATION')
     print(authInfo)
@@ -80,7 +90,6 @@ def logout(request):
     except Exception as e:
         # traceback.print_exc(e)
         print('token not exist')
-
         result = False
         errorInfo = u'退出登录失败'
     return Response({"result": result, "detail": {}, "errorInfo": errorInfo})
@@ -89,6 +98,7 @@ def logout(request):
 @api_view(["GET"])
 def getUserInfo(request):
     return Response({"result": "ok"})
+
 
 @api_view(["GET"])
 def testApi(request):

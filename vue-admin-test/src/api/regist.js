@@ -3,4 +3,4 @@ import {
     post
 } from "@/utils/request.js"
 
-export const register = () => get("/login/")
+export const register = (registerFormData) => post("/register/", registerFormData)

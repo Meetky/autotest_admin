@@ -13,19 +13,19 @@
       <h3>登录页面</h3>
       <el-form
         :rules="rules"
-        :model="form"
+        :model="loginForm"
         label-width="80px"
         label-color="red"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username"></el-input>
+          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password"></el-input>
+          <el-input type="password" prefix-icon="el-icon-lock" v-model="loginForm.password" show-password></el-input>
           <span
-            v-if="this.form.errorInfo"
+            v-if="this.loginForm.errorInfo"
             style="font-size: 10px; color: red"
-            >{{ form.errorInfo }}</span
+            >{{ loginForm.errorInfo }}</span
           >
         </el-form-item>
         <el-form-item class="btn">
@@ -44,7 +44,7 @@ export default {
   name: "Login",
   data() {
     return {
-      form: {
+      loginForm: {
         username: "",
         password: "",
         errorInfo: "",
@@ -55,14 +55,14 @@ export default {
           {
             pattern: /^(?!\s+).*(?<!\s)$/,
             message: "首尾不能为空格",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
-            pattern: /^(?!\s+).*(?<!\s)$/,
-            message: "首尾不能为空格",
+            pattern: /^(\w){5,16}$/,
+            message: "只能输入5-16个字母、数字、下划线",
             trigger: "blur",
           },
         ],
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     login() {
-      if (this.form.username === "" || this.form.password === "") {
+      if (this.loginForm.username === "" || this.loginForm.password === "") {
         console.log("输入为空");
         this.$message({
           showClose: true,
@@ -88,8 +88,8 @@ export default {
         //   },
         // }).then(
         login({
-          username: this.form.username,
-          password: this.form.password,
+          username: this.loginForm.username,
+          password: this.loginForm.password,
         }).then(
           (response) => {
             if (response.status === 200 && response.data.result) {
@@ -102,11 +102,11 @@ export default {
               this.$router.push({
                 path: "/home",
                 query: {
-                  username: this.form.username,
+                  username: this.loginForm.username,
                 },
               });
             } else {
-              this.form.errorInfo = response.data.errorInfo;
+              this.loginForm.errorInfo = response.data.errorInfo;
             }
           },
           (error) => {
@@ -120,17 +120,22 @@ export default {
         );
       }
     },
+    // regist() {
+    //   register().then(
+    //     (response) => {
+    //       console.log(response.data);
+    //       this.$message.error("还不支持注册噢");
+    //     },
+    //     (error) => {
+    //       console.log("请求失败", error.message);
+    //       this.$message.error("还不支持注册噢");
+    //     }
+    //   );
+    // },
     regist() {
-      register().then(
-        (response) => {
-          console.log(response.data);
-          this.$message.error("还不支持注册噢");
-        },
-        (error) => {
-          console.log("请求失败", error.message);
-          this.$message.error("还不支持注册噢");
-        }
-      );
+      this.$router.push({
+        path: "/register",
+      });
     },
   },
 };

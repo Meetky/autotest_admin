@@ -14,6 +14,10 @@ const router = new Router({
             component: Login
         },
         {
+            path: "/register",
+            component: () => import("@/components/Register")
+        },
+        {
             name: "home",
             path: '/home',
             component: () => import("@/components/Home")
@@ -34,7 +38,7 @@ router.beforeEach((to, from, next) => {
         }
     } else {
         // token不存在  路径'/login'就是登录页面设置的path
-        if (to.path === '/login') {
+        if (to.path === '/login' || to.path === "/register") {
             next();
         } else {
             next('/')

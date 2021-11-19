@@ -142,3 +142,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if __name__ == '__main__':
+    print(os.path.join(BASE_DIR, r'vue-admin-test\dist'))
