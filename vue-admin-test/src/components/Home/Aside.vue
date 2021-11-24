@@ -62,13 +62,17 @@ export default {
 
 <style>
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+  width: 300px;
   min-height: 400px;
 }
 
 .el-menu {
   background-color: rgb(207, 211, 219);
   border: 0px;
+}
+.el-menu-item {
+  height: 60px;
+  line-height: 60px;
 }
 /* .con {
   position: fixed;

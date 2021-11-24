@@ -18,10 +18,18 @@
         label-color="red"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"></el-input>
+          <el-input
+            prefix-icon="el-icon-user-solid"
+            v-model="loginForm.username"
+          ></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" prefix-icon="el-icon-lock" v-model="loginForm.password" show-password></el-input>
+          <el-input
+            type="password"
+            prefix-icon="el-icon-lock"
+            v-model="loginForm.password"
+            show-password
+          ></el-input>
           <span
             v-if="this.loginForm.errorInfo"
             style="font-size: 10px; color: red"
@@ -39,7 +47,6 @@
 
 <script>
 import { login } from "@/api/login.js";
-import { register } from "@/api/regist.js";
 export default {
   name: "Login",
   data() {
@@ -160,12 +167,16 @@ export default {
       float: right;
     }
   }
+  .box-card:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 100px;
+  }
   .btn {
     margin-right: 46px;
   }
 }
 button:hover {
-  box-shadow: 0px 15px 20px rgba(11, 201, 83, 0.4);
+  box-shadow: 0px 15px 20px rgba(175, 177, 176, 0.4);
   transform: translateY(-7px);
 }
 

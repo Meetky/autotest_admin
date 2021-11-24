@@ -26,7 +26,7 @@ class Register:
 
     def register(self, data):
         username = data.get("username")
-        password = data.get("password")
+        password = data.get("password1")
         email = data.get("email")
         print("用户提交的注册信息：", username, password, email)
         if username in [user[0] for user in self.query_username()]:

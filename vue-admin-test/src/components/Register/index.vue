@@ -36,6 +36,8 @@
           <el-form-item label="密码" prop="password1">
             <el-input
               placeholder="请输入密码"
+              type="password"
+              show-password
               v-model="registerForm.password1"
               style="width: 321px"
             >
@@ -44,11 +46,15 @@
           <el-form-item label="确认密码" prop="password2">
             <el-input
               placeholder="再次输入密码"
+              type="password"
+              show-password
               v-model="registerForm.password2"
               style="width: 321px"
             >
             </el-input
             ><br />
+          </el-form-item>
+          <el-form-item>
             <p v-if="this.errorInfo" style="font-size: 10px; color: #f56c6c">
               {{ errorInfo }}
             </p>
@@ -108,20 +114,58 @@ export default {
     };
   },
   methods: {
+    //注册功能函数
     submitForm() {
-      if (this.registerForm.password1 !== this.registerForm.password2) {
-        this.errorInfo = "密码不一致";
-      } else {
-        register(this.registerForm).then(
-          (response) => {
-            console.log(response.data);
-          },
-          (error) => {
-            console.log(error.message);
+      //表单校验
+      this.$refs["registerForm"].validate((valid) => {
+        if (valid) {
+          // 表单校验成功
+          if (this.registerForm.password1 !== this.registerForm.password2) {
+            // 如果两次密码输入不一致，则不允许注册
+            this.errorInfo = "两次密码输入不一致";
+          } else {
+            //注册请求
+            register(this.registerForm).then(
+              (response) => {
+                //请求成功
+                if (
+                  response.data.result &&
+                  response.data.detail.msg === "注册成功" &&
+                  !response.data.errorInfo
+                ) {
+                  //若返回数据中包含“注册成功”、“true”和errorInfo为空，则成功，跳转至登录页面
+                  console.log("注册成功！！", response.data);
+                  this.$message({
+                    message: "恭喜你，注册成功！！即将跳转至登录页面~",
+                    type: "success",
+                  });
+                  //若setTimeout中需要使用this,则需要在函数外定义一个变量暂存this.
+                  var that = this;
+                  setTimeout(() => {
+                    that.$router.push({
+                      path: "/login",
+                    });
+                  }, 1500);
+                } else {
+                  //注册失败,返回errorInfo
+                  this.$message.error(response.data.errorInfo);
+                }
+              },
+              (error) => {
+                //服务器异常
+                console.log(error.message);
+                this.$message.error("服务器抛锚啦！请耐心等待...");
+              }
+            );
           }
-        );
-        console.log(this.registerForm);
-      }
+        } else {
+          // 表单校验成功，注册信息不完善的情况
+          console.log(this.registerForm);
+          // this.errorInfo = "请完善注册信息！！";
+          this.$message.error("请完善注册信息！！");
+          return false;
+        }
+      });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -176,19 +220,18 @@ export default {
   width: 720px;
   overflow: hidden;
   /* float: left; */
+  /* 按钮动画 */
+  button:hover {
+    box-shadow: 0px 15px 20px rgba(209, 212, 211, 0.4);
+    transform: translateY(-7px);
+  }
+
+  button:active {
+    transform: translateY(-1px);
+  }
 }
 .demo-ruleForm {
   margin: 0;
   padding: 0;
-}
-
-/* 按钮动画 */
-button:hover {
-  box-shadow: 0px 15px 20px rgba(209, 212, 211, 0.4);
-  transform: translateY(-7px);
-}
-
-button:active {
-  transform: translateY(-1px);
 }
 </style>
