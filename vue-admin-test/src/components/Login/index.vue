@@ -105,6 +105,13 @@ export default {
                 // JSON.stringify(response.data.detail.token) token转成字符串后，后端无法校验
                 response.data.detail.token
               );
+              localStorage.setItem(
+                "userInfo",
+                JSON.stringify({
+                  username: this.loginForm.username,
+                  token: response.data.detail.token,
+                })
+              );
               //登录成功,跳转至首页,传递用户名
               this.$router.push({
                 path: "/home",

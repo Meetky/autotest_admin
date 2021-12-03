@@ -5,7 +5,7 @@
       class="el-menu-vertical-demo"
       :collapse="!isCollapse"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="1" @click="toHome">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
       </el-menu-item>
@@ -28,6 +28,11 @@
         </el-submenu>
       </el-submenu>
 
+      <el-menu-item index="5" @click="toSite">
+        <i class="el-icon-s-flag"></i>
+        <span slot="title">站点收录</span>
+      </el-menu-item>
+
       <el-menu-item index="3" disabled>
         <i class="el-icon-document"></i>
         <span slot="title">导航三</span>
@@ -47,6 +52,14 @@ export default {
     return {
       isCollapse: false,
     };
+  },
+  methods: {
+    toHome() {
+      this.$router.push("/home");
+    },
+    toSite() {
+      this.$router.push("/site");
+    },
   },
   mounted() {
     // 触发事件时，展开收起侧边栏
@@ -79,4 +92,17 @@ export default {
   height: 100%;
   width: 100%;
 } */
+
+a,
+a:hover,
+a:active,
+a:visited,
+a:link,
+a:focus {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  background: none;
+  text-decoration: none;
+}
 </style>

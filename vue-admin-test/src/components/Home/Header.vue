@@ -12,8 +12,7 @@
           <el-avatar
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           ></el-avatar>
-          {{ this.$route.query.username
-          }}<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item icon="el-icon-switch-button"
@@ -34,12 +33,12 @@
 <script>
 import { verifyToken } from "@/api/token.js";
 import { get } from "@/utils/request.js";
-import axios from "axios";
 export default {
   name: "Header",
   data() {
     return {
       nickname: "",
+      username: "",
     };
   },
   methods: {
@@ -49,6 +48,7 @@ export default {
     logout() {
       console.log("用户点击退出了");
       localStorage.removeItem("token");
+      localStorage.removeItem("userInfo");
       this.$router.push("/");
     },
     test() {
@@ -63,6 +63,11 @@ export default {
       // });
       get("/testApi/");
     },
+  },
+  created() {
+    // 获取用户名称
+    console.log(JSON.parse(localStorage.getItem("userInfo")));
+    this.username = JSON.parse(localStorage.getItem("userInfo")).username;
   },
 };
 </script>

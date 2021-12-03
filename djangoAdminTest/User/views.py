@@ -97,6 +97,7 @@ def logout(request):
 
 @api_view(["GET"])
 def getUserInfo(request):
+    print(request.META)
     return Response({"result": "ok"})
 
 

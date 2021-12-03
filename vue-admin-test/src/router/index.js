@@ -17,11 +17,24 @@ const router = new Router({
             path: "/register",
             component: () => import("@/components/Register")
         },
+
         {
             name: "home",
             path: '/home',
-            component: () => import("@/components/Home")
-        }
+            component: () => import("@/components/Home"),
+            hidden: true,
+            redirect: "/main",
+            children: [{
+                path: "/main",
+                component: () => import("@/components/Home/Main")
+            }, {
+                name: "site",
+                path: "/site",
+                component: () => import("@/components/Site"),
+                // hidden: true
+            }]
+        },
+
 
     ]
 })
@@ -46,6 +59,12 @@ router.beforeEach((to, from, next) => {
     }
 
 })
+
+// 解决重复点击导航报错 Uncaught (in promise) NavigationDuplicated: Avoided redundant navigation to current location
+const VueRouterPush = Router.prototype.push
+Router.prototype.push = function push(to) {
+    return VueRouterPush.call(this, to).catch(err => err)
+}
 
 //暴露router
 export default router

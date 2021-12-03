@@ -5,7 +5,7 @@
     </div>
     <div class="main" style="float: left">
       <el-header><Header></Header></el-header>
-      <el-main>Main</el-main>
+      <el-main><router-view></router-view></el-main>
     </div>
   </el-container>
 </template>
@@ -13,11 +13,15 @@
 <script>
 import Header from "./Header.vue";
 import Aside from "./Aside.vue";
+import Main from "./Main.vue";
+
+import { get } from "@/utils/request.js";
 export default {
   name: "Home",
   components: {
     Header,
     Aside,
+    Main,
   },
   beforeCreate() {
     if (!localStorage.getItem("token")) {
@@ -28,6 +32,9 @@ export default {
         duration: 1500,
       });
       this.$router.push("/");
+    } else {
+      // 登录状态正常,获取用户信息path: token/
+      get("/token/");
     }
   },
 };
